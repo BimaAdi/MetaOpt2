@@ -1,6 +1,7 @@
 # Clonal Selection Algorithm (CLONALG)
 
-source('D:/KULIAH/Semester 8/MetaOpt2/R/metaheuristic.FunctionCollection.R')
+source('./R/metaheuristic.FunctionCollection.R')
+source('./testFunction/13TestFunction.R')
 
 ## initialize parameter 1
 FUN <- sphere
@@ -52,12 +53,12 @@ CLONALG <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500,
   
   #generate candidate solutions
   candidateSolutions <- generateRandom(numPopulation, dimension, lowerBound, upperBound)
-  bestPos <- engineCLONALG(FUN, optimType, numVar, numPopulation, maxIter, rangeVar,
+  bestPos <- engineCLONALG(FUN, optimType, numVar, numPopulation, maxIter, rangeVar, lowerBound, upperBound,
                            selectionSize, multipicationFactor, hypermutationRate, candidateSolutions)
   return(bestPos)
 }
 
-engineCLONALG <- function(FUN, optimType, numVar, numPopulation, maxIter, rangeVar, 
+engineCLONALG <- function(FUN, optimType, numVar, numPopulation, maxIter, rangeVar, lowerBound, upperBound,
                           selectionSize, multipicationFactor, hypermutationRate,
                           candidateSolution){
   # evaluate candidate solution
@@ -95,4 +96,3 @@ engineCLONALG <- function(FUN, optimType, numVar, numPopulation, maxIter, rangeV
   }
   return(calcBest(FUN, optimType, as.matrix(candidateSolutions[, 1:numVar])))
 }
-
