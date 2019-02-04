@@ -1,10 +1,12 @@
 # 13 Test Function
-test.function.spec <- data.frame(id = c("f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13"),
+test.spec <- data.frame(id = c("f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13"),
                             name = c("Sphere Model", "Schewefel's Problem 2.22", "Schewefel's Problem 1.2",
                                       "Schewefel's Problem 2.21", "Generalized Rosenbrock's", "Step Function",
                                       "Quartic with Noise", "Generalized Schewefel's Problem 2.26", "Generalized Rastrigin's Function",
                                       "Ackley's Function", "Generalized Griewank Function", "Generalized Penalized Function 1",
                                       "Generalized Penalized Function 2"),
+                            optimType=rep("MIN", 13),
+                            numVar=c(1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5),
                             lowerBound = c(-100, -10, -100, -100, -30, -100, -1.28, -500, -5.12, -32, -600, -50, -50),
                             upperBound = c(100, 10, 100, 100, 30, 100, 1.28, 500, 5.12, 32, 600, 50, 50),
                             x = c(0, 0, 0, 0, 1, 0, 0, 420.9687, 0, 0, 0, 1, 1),

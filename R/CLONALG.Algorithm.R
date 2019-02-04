@@ -1,31 +1,6 @@
 # Clonal Selection Algorithm (CLONALG)
 
 source('./R/metaheuristic.FunctionCollection.R')
-source('./testFunction/13TestFunction.R')
-
-## initialize parameter 1
-FUN <- sphere
-optimType <- "MIN"
-numVar <- 1
-numPopulation <- 10
-maxIter <- 5
-rangeVar <- matrix(c(-10,10), nrow=2)
-selectionSize <- 2
-multipicationFactor <- 0.5
-hypermutationRate <- 0.6
-
-## initialize parameter 2
-FUN <- f3
-optimType <- "MIN"
-numVar <- 2
-numPopulation <- 5
-maxIter <- 5
-rangeVar <- matrix(c(-10,10), nrow=2)
-selectionSize <- 2
-multipicationFactor <- 0.5
-hypermutationRate <- 0.5
-
-print(CLONALG(FUN=FUN, optimType=optimType , numVar=numVar, rangeVar=rangeVar))
 
 CLONALG <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, 
                     selectionSize=10, multipicationFactor=0.5, hypermutationRate=0.5){
