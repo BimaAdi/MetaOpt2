@@ -40,6 +40,7 @@ engineCLONALG <- function(FUN, optimType, numVar, numPopulation, maxIter, rangeV
   fitness <- calcFitness(FUN, optimType, candidateSolution)
   candidateSolutions <- data.frame(candidateSolution, fitness)
   
+  progressbar <- txtProgressBar(min = 0, max = maxIter, style = 3)
   for(t in 1:maxIter){
     # Select top "selectionSize" with best fitness from candidateSolutions as topSelections
     candidateSolutions <- candidateSolutions[order(candidateSolutions$fitness), ]
@@ -68,6 +69,9 @@ engineCLONALG <- function(FUN, optimType, numVar, numPopulation, maxIter, rangeV
     candidateSolutions <- rbind(candidateSolutions, data.frame(candidateSolution, fitness))
     candidateSolutions <- candidateSolutions[order(candidateSolutions$fitness), ]
     candidateSolutions <- candidateSolutions[1:numPopulation, ]
+    
+    setTxtProgressBar(progressbar, t)
   }
+  close(progressbar)
   return(calcBest(FUN, optimType, as.matrix(candidateSolutions[, 1:numVar])))
 }
