@@ -37,6 +37,7 @@ engineBHO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound
   fitness <- calcFitness(FUN, optimType, candidateSolution)
   candidateSolutions <- data.frame(candidateSolution, fitness)
   
+  progressbar <- txtProgressBar(min = 0, max = maxIter, style = 3)
   for(t in 1:maxIter){
     # select best candidate solution as blackhole and other as star
     bestCandidateSolution <- order(candidateSolutions$fitness)[1]
@@ -68,8 +69,10 @@ engineBHO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound
     }
     
     # combine blackhole and star 
-    candidateSolutions <- rbind(blackhole, star) 
+    candidateSolutions <- rbind(blackhole, star)
+    setTxtProgressBar(progressbar, t)
   }
   #??
+  close(progressbar)
   return(calcBest(FUN, -1*optimType, as.matrix(candidateSolutions[, 1:numVar])))
 }

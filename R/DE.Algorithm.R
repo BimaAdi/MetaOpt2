@@ -89,16 +89,3 @@ engineDE <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound,
   close(progressbar)
   return(calcBest(FUN, -1*optimType, as.matrix(candidateSolutions[, 1:numVar])))
 }
-
-a <- function(a=0.2){
-  if(a < 0 || a > 1){
-    #stop("a must between 0 and 1")
-    warning("you fool")
-  }
-  return(a *10)
-}
-a <- matrix(rep(2, 50), ncol = 5, byrow = TRUE)
-t(apply(a, 1, function(x){
-  print(x)
-  c(1, 2, 3, 4, 5)
-}))
