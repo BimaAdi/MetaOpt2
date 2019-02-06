@@ -3,7 +3,7 @@
 source('./R/metaheuristic.FunctionCollection.R')
 
 DE <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
-               scalingVector=0.1, crossOverRate=0.5){
+               scalingVector=0.1, crossOverRate=0.9){
   # check parameter scalingVector
   if(scalingVector < 0 || scalingVector > 1){
     stop("parameter scalingVector must between 0 and 1")
@@ -37,7 +37,7 @@ DE <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rang
   }
   
   # generate candidate solution
-  candidateSolution <- generateRandom(numPopulation, dimension, lowerBound, upperBound)
+  candidateSolution <- generateRandomDE(numPopulation, dimension, lowerBound, upperBound)
   bestPos <- engineDE(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution,
                       scalingVector, crossOverRate)
   
@@ -88,4 +88,12 @@ engineDE <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound,
   }
   close(progressbar)
   return(calcBest(FUN, -1*optimType, as.matrix(candidateSolutions[, 1:numVar])))
+}
+
+generateRandomDE <- function(numPopulation, dimension, lowerBound, upperBound){
+  matrixLowerBound <- matrix(rep(lowerBound, numPopulation), ncol = dimension, byrow = TRUE)
+  matrixUpperBound <- matrix(rep(upperBound, numPopulation), ncol = dimension, byrow = TRUE)
+  matrixRandom <- matrix(runif(numPopulation * dimension), ncol = dimension, byrow = TRUE)
+  result <- matrixLowerBound + matrixRandom * (matrixUpperBound - matrixLowerBound) 
+  return(result)
 }
