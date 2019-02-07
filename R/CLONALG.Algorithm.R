@@ -55,13 +55,14 @@ engineCLONALG <- function(FUN, optimType, numVar, numPopulation, maxIter, rangeV
     }
     
     # hypermutate clone
-    clone <- apply(clone, c(1,2), function(x, colIndex){
-      if(runif(1) <= multipicationFactor){
-        runif(1, min = lowerBound[colIndex], max = upperBound[colIndex])
-      }else{
-        x
-      }
-    }, colIndex=col(clone))
+    probMatrix <- apply(matrix(NA, ncol = ncol(clone), nrow= nrow(clone), byrow = TRUE), c(1, 2), function(x){
+      runif(1)
+    })
+    rangeVarMatrix <- rbind(lowerBound[col(clone)[probMatrix <= multipicationFactor]], 
+                            upperBound[col(clone)[probMatrix <= multipicationFactor]])
+    clone[probMatrix <= multipicationFactor] <- apply(rangeVarMatrix, c(2), function(x){
+      runif(1, min = x[1], max = x[2])
+    })
     
     # maturation step
     candidateSolution <- clone

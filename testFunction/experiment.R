@@ -12,7 +12,7 @@ lowerBound <- c(-10, -20)
 upperBound <- c(10, 20)
 x <- matrix(1:10, ncol = 2, byrow = TRUE)
 probMatrix <- matrix(NA, ncol = 2, nrow= 5, byrow = TRUE)
-probMatrix <- apply(randomMatrix, c(1, 2), function(x){
+probMatrix <- apply(matrix(NA, ncol = 2, nrow= 5, byrow = TRUE), c(1, 2), function(x){
   runif(1)
 })
 x[probMatrix < 0.5]   
@@ -20,3 +20,11 @@ col(x)[probMatrix < 0.5]
 
 lowerBound[col(x)[probMatrix < 0.5]]
 upperBound[col(x)[probMatrix < 0.5]]
+mutationMatrix <- apply(rbind(lowerBound[col(x)[probMatrix < 0.5]], upperBound[col(x)[probMatrix < 0.5]]), c(2), function(x){
+  runif(1, min = x[1], max = x[2])
+})
+x[probMatrix < 0.5] <- mutationMatrix
+
+# 1. pseudocode diganti atau tidak
+# 2. kecepatan algoritma DE
+# 3. apakah format program sudah sesuai
