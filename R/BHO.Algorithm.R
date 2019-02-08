@@ -46,7 +46,9 @@ engineBHO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound
     
     # change location each star candidate solution (cs)
     csStar <- data.matrix(star[,1:numVar])
-    randomMatrix <- matrix(runif(numVar * nrow(star)), ncol = numVar)
+    randomMatrix <- apply(matrix(ncol = numVar, nrow = nrow(star)), c(1, 2), function(x){
+      runif(1)
+    })
     csBlackhole <- matrix(rep(as.numeric(blackhole[1, 1:numVar]), nrow(star)), ncol = numVar, byrow = TRUE)
     star[,1:numVar] <- csStar + randomMatrix * (csBlackhole - csStar)
     star$fitness <- calcFitness(FUN, optimType, data.matrix(star[,1:numVar]))

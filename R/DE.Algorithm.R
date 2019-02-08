@@ -93,7 +93,9 @@ engineDE <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound,
 generateRandomDE <- function(numPopulation, dimension, lowerBound, upperBound){
   matrixLowerBound <- matrix(rep(lowerBound, numPopulation), ncol = dimension, byrow = TRUE)
   matrixUpperBound <- matrix(rep(upperBound, numPopulation), ncol = dimension, byrow = TRUE)
-  matrixRandom <- matrix(runif(numPopulation * dimension), ncol = dimension, byrow = TRUE)
+  matrixRandom <- apply(matrix(ncol = dimension, nrow = numPopulation), c(1, 2), function(x){
+    runif(1)
+  })
   result <- matrixLowerBound + matrixRandom * (matrixUpperBound - matrixLowerBound) 
   return(result)
 }
