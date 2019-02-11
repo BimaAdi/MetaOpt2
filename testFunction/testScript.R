@@ -1,10 +1,13 @@
 # Test for CLONALG------------------------------------------------------------------------
+library("tictoc", lib.loc="~/R/win-library/3.5")
 source("./testFunction/13TestFunction.R")
 source("./R/CLONALG.Algorithm.R")
 
 #f1
+tic(msg = "Finished in")
 CLONALG(FUN=f1, optimType=test.spec$optimType[1] , numVar=test.spec$numVar[1], 
         rangeVar=matrix(c(test.spec$lowerBound[1], test.spec$upperBound[1]), nrow = 2))
+toc()
 #f2
 CLONALG(FUN=f2, optimType=test.spec$optimType[2] , numVar=test.spec$numVar[2], 
         rangeVar=matrix(c(test.spec$lowerBound[2], test.spec$upperBound[2]), nrow = 2))
