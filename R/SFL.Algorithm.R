@@ -4,10 +4,6 @@ source('./R/metaheuristic.FunctionCollection.R')
 
 SFL <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
                 numMemeplex=3, frogLeapingIteration=10){
-  # check parameter numMemeplex
-  if(is.integer(numMemeplex)){
-    stop("numMemeplex must integer")
-  }
   if(numMemeplex > numPopulation){
     stop("numMemeplex must less than or equal to numPopulation")
   }
