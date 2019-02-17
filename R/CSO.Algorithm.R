@@ -76,9 +76,15 @@ engineCSO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound
     # if flag == "seeking" ----
     seeking <- candidateSolutions[candidateSolutions$flag == "seeking",]
     seekingVariable <- seeking[,indexVariable]
+    if(numVar == 1){
+      x <- seekingVariable
+      copyId <- 1:length(seekingVariable)
+      seekingVariable <- data.frame(x, copyId)
+    }else{
+      seekingVariable$copyId <- 1:nrow(seekingVariable)
+    }
     
     # make smp copies
-    seekingVariable$copyId <- 1:nrow(seekingVariable)
     copies <- data.frame()
     if(spc == TRUE){
       for(i in 1:smp){
@@ -100,7 +106,7 @@ engineCSO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound
         x[pickedVariables] <- x[pickedVariables]*posOrNeg*srd/100
         return(x)
       })
-      copies[,indexVariable] <- t(modified)
+      if(numVar == 1) copies[,indexVariable] <- modified else copies[,indexVariable] <- t(modified)
     }
     
     # calculate probabilty of all candidate solution (flag == "seeking")
