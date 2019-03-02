@@ -1,7 +1,5 @@
 # Cuckoo Search (CS)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 CS <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, abandonedFraction=0.5){
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)

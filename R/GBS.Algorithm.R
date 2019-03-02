@@ -1,7 +1,5 @@
 # Gravitational Based Search Algorithm (GBS)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 GBS <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
                 gravitationalConst=100, kbest=0.5){
   # calculate the dimension of problem if not specified by user
@@ -29,7 +27,6 @@ GBS <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, ran
 
 engineGBS <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution,
                       gravitationalConst=100, kbest=0.5){
-  # GBS starthere ----
   numVar <- ncol(candidateSolution)
   numPopulation <- nrow(candidateSolution)
   # give every candidate solution initial velocity

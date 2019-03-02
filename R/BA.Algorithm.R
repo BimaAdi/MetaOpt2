@@ -1,7 +1,5 @@
 # Bat Algorithm (BA)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 BA <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, 
                maxFrequency=1, minFrequency=-1, gama=1, alpha=0.5){
   # calculate the dimension of problem if not specified by user

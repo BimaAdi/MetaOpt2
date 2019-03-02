@@ -1,7 +1,5 @@
 # Black Hole-based Optimization (BHO)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 BHO <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar){
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)
@@ -27,12 +25,14 @@ BHO <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, ran
   
   # generate candidate solution
   candidateSolution <- generateRandom(numPopulation, dimension, lowerBound, upperBound)
-  bestPos <- engineBHO(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution)
+  bestPos <- engineBHO(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution)
   
   return(bestPos)
 }
 
-engineBHO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution){
+engineBHO <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution){
+  numVar <- ncol(candidateSolution)
+  numPopulation <- nrow(candidateSolution)
   # generate candidate solutions
   fitness <- calcFitness(FUN, optimType, candidateSolution)
   candidateSolutions <- data.frame(candidateSolution, fitness)

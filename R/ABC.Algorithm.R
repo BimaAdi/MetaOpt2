@@ -1,7 +1,5 @@
 # Artificial Bee Colony Algorithm (ABC)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 ABC <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, cycleLimit=3){
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)
@@ -27,12 +25,14 @@ ABC <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, ran
   
   # generate candidate solution
   candidateSolution <- generateRandom(numPopulation, dimension, lowerBound, upperBound)
-  bestPos <- engineABC(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution, cycleLimit)
+  bestPos <- engineABC(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution, cycleLimit)
   
   return(bestPos)
 }
 
-engineABC <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution, cycleLimit){
+engineABC <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution, cycleLimit){
+  numVar <- ncol(candidateSolution)
+  numPopulation <- nrow(candidateSolution)
   # generate candidate solutions
   fitness <- calcFitness(FUN, optimType, candidateSolution)
   limit <- rep(cycleLimit, numPopulation)

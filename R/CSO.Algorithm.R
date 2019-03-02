@@ -1,7 +1,5 @@
 # Cat Swarm Optimization (CSO)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 CSO <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
                 mixtureRatio=0.5, tracingConstant=0.1, maximumVelocity=1, smp=3, srd=50, cdc=1, spc=TRUE){
   dimension <- ncol(rangeVar)
@@ -27,13 +25,15 @@ CSO <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, ran
   
   # generate candidate solution
   candidateSolution <- generateRandom(numPopulation, dimension, lowerBound, upperBound)
-  bestPos <- engineCSO(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution,
+  bestPos <- engineCSO(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution,
                        mixtureRatio, tracingConstant, maximumVelocity, smp, srd, cdc, spc)
   return(bestPos)
 }
 
-engineCSO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution,
+engineCSO <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution,
                       mixtureRatio, tracingConstant, maximumVelocity, smp, srd, cdc, spc){
+  numVar <- ncol(candidateSolution)
+  numPopulation <- nrow(candidateSolution)
   # generate candidate solutions
   fitness <- calcFitness(FUN, optimType, candidateSolution)
   velocity <- apply(matrix(rep(NA, numPopulation*numVar), ncol = numVar), c(1, 2), function(x){
@@ -45,7 +45,7 @@ engineCSO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound
   progressbar <- txtProgressBar(min = 0, max = maxIter, style = 3)
   for(t in 1:maxIter){
     # Give each candidate solutions flag
-    candidateSolutions$flag <- flaging(mixtureRatio, numPopulation)
+    candidateSolutions$flag <- flagingCSO(mixtureRatio, numPopulation)
     # Determine/update best and worst candidate solution
     bestCandidateinThisIteration <- candidateSolutions[order(candidateSolutions$fitness)[1],]
     if(bestCandidate$fitness > bestCandidateinThisIteration$fitness) bestCandidate <- bestCandidateinThisIteration
@@ -111,7 +111,7 @@ engineCSO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound
     
     # calculate probabilty of all candidate solution (flag == "seeking")
     copies <- rbind(seekingVariable, copies)
-    copies$probability <- probability(as.matrix(copies[,indexVariable]), bestCandidate, worstCandidate, FUN, optimType)
+    copies$probability <- probabilityCSO(as.matrix(copies[,indexVariable]), bestCandidate, worstCandidate, FUN, optimType)
     
     # chose one candidate solution for each copy based on probability
     for(i in 1:nrow(seekingVariable)){
@@ -133,7 +133,7 @@ engineCSO <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound
   return(as.matrix(bestCandidate[,indexVariable]))
 }
 
-flaging <- function(mixtureRatio, numPopulation){
+flagingCSO <- function(mixtureRatio, numPopulation){
   numSeeking <- mixtureRatio * numPopulation
   numTracing <- (1 - mixtureRatio) * numPopulation
   seeking <- rep("seeking", ceiling(numSeeking))
@@ -145,7 +145,7 @@ flaging <- function(mixtureRatio, numPopulation){
   return(result)
 }
 
-probability <- function(input, best, worst, FUN, optimType){
+probabilityCSO <- function(input, best, worst, FUN, optimType){
   inputFitness <- calcFitness(FUN, optimType, input)
   bestFitness <- best$fitness
   worstFitness <- worst$fitness

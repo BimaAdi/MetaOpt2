@@ -1,7 +1,5 @@
 # Differential Evolution (DE)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 DE <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
                scalingVector=0.1, crossOverRate=0.9){
   # check parameter scalingVector
@@ -38,14 +36,16 @@ DE <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rang
   
   # generate candidate solution
   candidateSolution <- generateRandomDE(numPopulation, dimension, lowerBound, upperBound)
-  bestPos <- engineDE(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution,
+  bestPos <- engineDE(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution,
                       scalingVector, crossOverRate)
   
   return(bestPos)
 }
 
-engineDE <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution,
+engineDE <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution,
                      scalingVector, crossOverRate){
+  numVar <- ncol(candidateSolution)
+  numPopulation <- nrow(candidateSolution)
   fitness <- calcFitness(FUN, optimType, candidateSolution)
   candidateSolutions <- data.frame(candidateSolution, fitness)
   

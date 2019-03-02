@@ -1,7 +1,5 @@
 # Krill-Heard Algorithm(KH)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 KH <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
                maxMotionInduced=0.01, inertiaWeightOfMotionInduced=0.01, epsilon=5e-05, foragingSpeed=0.02,
                inertiaWeightOfForagingSpeed=0.01, maxDifussionSpeed=0.01, constantSpace=1, mu=0.5){
@@ -62,11 +60,11 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
     alpha <- c()
     for(index in 1:numPopulation){
       X <- apply(as.matrix(candidateSolution[isIncludeSD[index,],]), c(1), function(x, y){
-        xij(y, x, epsilon)
+        xijKH(y, x, epsilon)
       }, y=candidateSolution[index,])
       
       K <- sapply(CSFitness[isIncludeSD[index,]], function(x, y){
-        kij(y,x, bestFitness, worstFitness)
+        kijKH(y,x, bestFitness, worstFitness)
       }, y=CSFitness[index])
       
       if(numVar == 1){
@@ -76,8 +74,8 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
       }
       
       Cbest <- 2*(runif(1)+t/maxIter)
-      X <- xij(candidateSolution[index,], best, epsilon)
-      K <- kij(CSFitness[index], bestFitness, bestFitness, worstFitness)
+      X <- xijKH(candidateSolution[index,], best, epsilon)
+      K <- kijKH(CSFitness[index], bestFitness, bestFitness, worstFitness)
       alphaTarget <- Cbest*K*X
       alpha <- rbind(alpha, alphaLocal + alphaTarget)  
     }
@@ -93,17 +91,17 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
     xFoodFitness <- calcFitness(FUN, optimType, matrix(Xfood, ncol = numVar))
     Cfood <- 2*(1-t/maxIter)
     Kifood <- sapply(CSFitness, function(x){
-      kij(x, xFoodFitness, bestFitness, worstFitness)  
+      kijKH(x, xFoodFitness, bestFitness, worstFitness)  
     })
     Xifood <- apply(candidateSolution, c(1), function(x){
-      xij(x, Xfood, epsilon)
+      xijKH(x, Xfood, epsilon)
     })
     
     Kibest <- sapply(CSFitness, function(x){
-      kij(x, bestFitness, bestFitness, worstFitness)  
+      kijKH(x, bestFitness, bestFitness, worstFitness)  
     })
     Xibest <- apply(candidateSolution, c(1), function(x){
-      xij(x, best, epsilon)
+      xijKH(x, best, epsilon)
     })
     
     if(numVar == 1){
@@ -134,7 +132,7 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
     worstFitness <- calcFitness(FUN, optimType, matrix(worst, ncol = numVar))
     gbest <- calcBest(FUN, -1*optimType, rbind(candidateSolution, gbest))
     Kibest <- sapply(CSFitness, function(x){
-      kij(x, bestFitness, bestFitness, worstFitness)  
+      kijKH(x, bestFitness, bestFitness, worstFitness)  
     })
     randomMatrix <- matrix(runif(numVar * numPopulation), ncol = numVar)
     Cr <- 0.2 * Kibest
@@ -155,7 +153,7 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
     worstFitness <- calcFitness(FUN, optimType, matrix(worst, ncol = numVar))
     gbest <- calcBest(FUN, -1*optimType, rbind(candidateSolution, gbest))
     Kibest <- sapply(CSFitness, function(x){
-      kij(x, bestFitness, bestFitness, worstFitness)  
+      kijKH(x, bestFitness, bestFitness, worstFitness)  
     })
     randomMatrix <- matrix(runif(numVar * numPopulation), ncol = numVar)
     Mu <- 0.05 * Kibest
@@ -176,10 +174,10 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
 }
 
 
-xij <- function(i, j, epsilon){
+xijKH <- function(i, j, epsilon){
   (j - i)/(dist(rbind(j, i)) + epsilon)
 }
 
-kij <- function(i, j, best, worst){
+kijKH <- function(i, j, best, worst){
   (i - j)/(worst - best)
 }

@@ -1,7 +1,5 @@
 # Clonal Selection Algorithm (CLONALG)
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 CLONALG <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, 
                     selectionSize=10, multipicationFactor=0.5, hypermutationRate=0.5){
   # calculate the dimension of problem if not specified by user
@@ -28,14 +26,16 @@ CLONALG <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500,
   
   #generate candidate solutions
   candidateSolutions <- generateRandom(numPopulation, dimension, lowerBound, upperBound)
-  bestPos <- engineCLONALG(FUN, optimType, numVar, numPopulation, maxIter, rangeVar, lowerBound, upperBound,
+  bestPos <- engineCLONALG(FUN, optimType, maxIter, rangeVar, lowerBound, upperBound,
                            selectionSize, multipicationFactor, hypermutationRate, candidateSolutions)
   return(bestPos)
 }
 
-engineCLONALG <- function(FUN, optimType, numVar, numPopulation, maxIter, rangeVar, lowerBound, upperBound,
+engineCLONALG <- function(FUN, optimType, maxIter, rangeVar, lowerBound, upperBound,
                           selectionSize, multipicationFactor, hypermutationRate,
                           candidateSolution){
+  numVar <- ncol(candidateSolution)
+  numPopulation <- nrow(candidateSolution)
   # evaluate candidate solution
   fitness <- calcFitness(FUN, optimType, candidateSolution)
   candidateSolutions <- data.frame(candidateSolution, fitness)

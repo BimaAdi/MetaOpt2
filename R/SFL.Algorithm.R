@@ -1,7 +1,5 @@
 # Shuffled Frog Leaping -----
 
-source('./R/metaheuristic.FunctionCollection.R')
-
 SFL <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
                 numMemeplex=3, frogLeapingIteration=10){
   if(numMemeplex > numPopulation){
@@ -34,13 +32,15 @@ SFL <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, ran
   }
   # initialize candidate solution
   candidateSolution <- generateRandom(numPopulation, dimension, lowerBound, upperBound)
-  bestPos <- engineSFL(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution,
+  bestPos <- engineSFL(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution,
                        numMemeplex, frogLeapingIteration)
   return(bestPos)
 }
 
-engineSFL <- function(FUN, optimType, numVar, numPopulation, maxIter, lowerBound, upperBound, candidateSolution,
+engineSFL <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateSolution,
                       numMemeplex, frogLeapingIteration){
+  numVar <- ncol(candidateSolution)
+  numPopulation <- nrow(candidateSolution)
   fitness <- calcFitness(FUN, optimType, candidateSolution)
   candidateSolutions <- data.frame(candidateSolution, fitness)
   
