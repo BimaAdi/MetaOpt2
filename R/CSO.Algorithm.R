@@ -1,7 +1,38 @@
 # Cat Swarm Optimization (CSO)
 
 CSO <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
-                mixtureRatio=0.5, tracingConstant=0.1, maximumVelocity=1, smp=3, srd=50, cdc=1, spc=TRUE){
+                mixtureRatio=0.5, tracingConstant=0.1, maximumVelocity=1, smp=as.integer(20), srd=20, cdc=as.integer(numVar), spc=TRUE){
+  # Validation
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
+  
+  if(maxIter < 0){
+    stop("maxIter must greater than or equal to 0")
+  }
+  
+  if(mixtureRatio < 0 | mixtureRatio > 1){
+    stop("mixtureRatio must between 0 and 1")
+  }
+  
+  if(tracingConstant < 0 | tracingConstant > 1){
+    stop("mixtureRatio must between 0 and 1")
+  }
+  
+  if(!is.integer(smp)){
+    stop("smp must be integer (as.integer())")  
+  }
+  
+  if(cdc > numVar){
+    stop("cdc must less than or equal to numVar")
+  }else if(!is.integer(cdc)){
+    stop("smp must be integer (as.integer())") 
+  }
+  
+  if(!is.logical(spc)){
+    stop("spc must be logical")
+  }
+  
   dimension <- ncol(rangeVar)
   
   # parsing rangeVar to lowerBound and upperBound
@@ -117,6 +148,7 @@ engineCSO <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidate
     for(i in 1:nrow(seekingVariable)){
       numCopies <- nrow(copies[copies$copyId == i,])
       probCopies <- copies[copies$copyId == i, "probability"]
+      #probCopies[probCopies < 0] <- 0
       choosenCopy <- sample(1:numCopies, 1, prob = probCopies)
       choosenCopy <- copies[copies$copyId == i, ][choosenCopy, indexVariable]
       seekingVariable[seekingVariable$copyId == i, indexVariable] <- choosenCopy
@@ -130,7 +162,7 @@ engineCSO <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidate
     setTxtProgressBar(progressbar, t)
   }
   close(progressbar)
-  return(as.matrix(bestCandidate[,indexVariable]))
+  return(as.numeric(bestCandidate[,indexVariable]))
 }
 
 flagingCSO <- function(mixtureRatio, numPopulation){
@@ -149,7 +181,7 @@ probabilityCSO <- function(input, best, worst, FUN, optimType){
   inputFitness <- calcFitness(FUN, optimType, input)
   bestFitness <- best$fitness
   worstFitness <- worst$fitness
-  result <- 1 - abs(inputFitness - bestFitness)/abs(bestFitness - worstFitness)
+  result <- abs(inputFitness - bestFitness)/(worstFitness - bestFitness)
   return(result)
 }
 
