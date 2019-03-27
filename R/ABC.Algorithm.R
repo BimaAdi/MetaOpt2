@@ -1,6 +1,21 @@
 # Artificial Bee Colony Algorithm (ABC)
 
-ABC <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, cycleLimit=3){
+ABC <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, cycleLimit=as.integer(10)){
+  
+  # Validation
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
+  
+  if(maxIter < 0){
+    stop("maxIter must greater than or equal to 0")
+  }
+  
+  if(cycleLimit < 0){
+    stop("cycleLimit must greater than 0")
+  }else if(!is.integer(cycleLimit)){
+    stop("cycleLimit must be integer (as.integer())")
+  }
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)
   

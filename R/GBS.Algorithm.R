@@ -1,7 +1,20 @@
 # Gravitational Based Search Algorithm (GBS)
 
 GBS <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
-                gravitationalConst=100, kbest=0.5){
+                gravitationalConst=max(rangeVar), kbest=0.1){
+  # Validation
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
+  
+  if(maxIter < 0){
+    stop("maxIter must greater than or equal to 0")
+  }
+  
+  if(kbest <= 0 | kbest > 1){
+    stop("kbest must between 0 and 1")
+  }
+  
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)
   

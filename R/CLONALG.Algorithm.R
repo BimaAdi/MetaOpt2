@@ -1,7 +1,25 @@
 # Clonal Selection Algorithm (CLONALG)
 
 CLONALG <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, 
-                    selectionSize=10, multipicationFactor=0.5, hypermutationRate=0.5){
+                    selectionSize=as.integer(numPopulation/4), multipicationFactor=0.5, hypermutationRate=0.5){
+  # Validation
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
+  
+  if(maxIter < 0){
+    stop("maxIter must greater than or equal to 0")
+  }
+  
+  if(!is.integer(selectionSize)){
+    stop("selectionSize must be integer")
+  }else if(selectionSize > numPopulation){
+    stop("selectionSize must less than or equal numPopulation")
+  }
+  
+  if(multipicationFactor < 0 | multipicationFactor > 1) stop("multipicationFactor must between 0 and 1")
+  if(hypermutationRate < 0 | hypermutationRate > 1) stop("hypermutationRate must between 0 and 1")
+  
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)
   

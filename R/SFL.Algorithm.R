@@ -1,7 +1,10 @@
 # Shuffled Frog Leaping -----
 
 SFL <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
-                numMemeplex=3, frogLeapingIteration=10){
+                numMemeplex=round(numPopulation/3), frogLeapingIteration=10){
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
   if(numMemeplex > numPopulation){
     stop("numMemeplex must less than or equal to numPopulation")
   }

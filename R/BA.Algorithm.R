@@ -1,7 +1,24 @@
 # Bat Algorithm (BA)
 
 BA <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, 
-               maxFrequency=1, minFrequency=-1, gama=1, alpha=0.5){
+               maxFrequency=0.1, minFrequency=-0.1, gama=1, alpha=0.1){
+  # Validation
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
+  
+  if(maxIter < 0){
+    stop("maxIter must greater than or equal to 0")
+  }
+  
+  if(alpha < 0 | alpha > 1){
+    stop("alpha must between 0 and 1")
+  }
+  
+  if(gama < 1){
+    stop("gama must greater or equal to 1")
+  }
+  
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)
   

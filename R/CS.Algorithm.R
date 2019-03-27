@@ -1,6 +1,19 @@
 # Cuckoo Search (CS)
 
 CS <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar, abandonedFraction=0.5){
+  # Validation
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
+  
+  if(maxIter < 0){
+    stop("maxIter must greater than or equal to 0")
+  }
+  
+  if(abandonedFraction < 0 | abandonedFraction > 1){
+    stop("abandonedFraction must between 0 and 1")
+  }
+  
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)
   

@@ -1,7 +1,15 @@
 # Differential Evolution (DE)
 
 DE <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
-               scalingVector=0.1, crossOverRate=0.9){
+               scalingVector=0.1, crossOverRate=0.5){
+  # Validation
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
+  
+  if(maxIter < 0){
+    stop("maxIter must greater than or equal to 0")
+  }
   # check parameter scalingVector
   if(scalingVector < 0 || scalingVector > 1){
     stop("parameter scalingVector must between 0 and 1")
