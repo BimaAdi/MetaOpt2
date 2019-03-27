@@ -1,8 +1,44 @@
 # Krill-Heard Algorithm(KH)
 
 KH <- function(FUN, optimType="MIN", numVar, numPopulation=40, maxIter=500, rangeVar,
-               maxMotionInduced=0.01, inertiaWeightOfMotionInduced=0.01, epsilon=5e-05, foragingSpeed=0.02,
-               inertiaWeightOfForagingSpeed=0.01, maxDifussionSpeed=0.01, constantSpace=1, mu=0.5){
+               maxMotionInduced=0.01, inertiaWeightOfMotionInduced=0.01, epsilon=1e-05, foragingSpeed=0.02,
+               inertiaWeightOfForagingSpeed=0.01, maxDifussionSpeed=0.01, constantSpace=1, mu=0.1){
+  # Validation
+  if(numPopulation < 1){
+    stop("numPopulation must greater than 0")
+  }
+  
+  if(maxIter < 0){
+    stop("maxIter must greater than or equal to 0")
+  }
+  
+  if(inertiaWeightOfMotionInduced < 0 | inertiaWeightOfMotionInduced > 1){
+    stop("inertiaWeightOfMotionInduced must between 0 and 1")
+  }
+  
+  if(inertiaWeightOfForagingSpeed < 0 | inertiaWeightOfForagingSpeed > 1){
+    stop("inertiaWeightOfForagingSpeed must between 0 and 1")
+  }
+  
+  if(maxMotionInduced < 0 | maxMotionInduced > 1){
+    stop("maxMotionInduced must between 0 and 1")
+  }
+  
+  if(foragingSpeed < 0 | foragingSpeed > 1){
+    stop("foragingSpeed must between 0 and 1")
+  }
+  
+  if(maxDifussionSpeed < 0 | maxDifussionSpeed > 1){
+    stop("maxDifussionSpeed must between 0 and 1")
+  }
+  
+  if(constantSpace < 0 | constantSpace > 2){
+    stop("constantSpace must between 0 and 2")
+  }
+  
+  if(mu < 0 | mu > 1){
+    stop("mu must between 0 and 1")
+  }
   # calculate the dimension of problem if not specified by user
   dimension <- ncol(rangeVar)
   
@@ -52,10 +88,10 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
     worstFitness <- calcFitness(FUN, optimType, matrix(worst, ncol = numVar))
     gbest <- calcBest(FUN, -1*optimType, rbind(candidateSolution, gbest))
     
+    
     # motion iduced
     sensingDistance <- 1/5*ncol(candidateSolution)*colSums(as.matrix(dist(candidateSolution)))
     isIncludeSD <- as.matrix(dist(candidateSolution, diag = T, upper = T)) < sensingDistance
-    candidateSolution[isIncludeSD[1,],]
     
     alpha <- c()
     for(index in 1:numPopulation){
@@ -85,6 +121,9 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
     # foraging motion
     if(numVar == 1){
       Xfood  <- sum(candidateSolution * 1 / CSFitness) / sum(1/CSFitness)
+      if(is.nan(Xfood)){
+        Xfood <- 0
+      }
     }else{
       Xfood  <- colSums(candidateSolution * 1 / CSFitness) / sum(1/CSFitness)
     }
@@ -112,6 +151,7 @@ engineKH <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidateS
       betaBest <- t(Xibest) * Kibest
     }
     beta <- betaFood + betaBest
+    
     f <- foragingSpeed*beta + inertiaWeightOfForagingSpeed*f
     
     # physical difussion
@@ -179,5 +219,9 @@ xijKH <- function(i, j, epsilon){
 }
 
 kijKH <- function(i, j, best, worst){
-  (i - j)/(worst - best)
+  if(worst == best){
+    0  
+  }else{
+    (i - j)/(worst - best)
+  }
 }
