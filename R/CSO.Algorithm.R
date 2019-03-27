@@ -148,8 +148,11 @@ engineCSO <- function(FUN, optimType, maxIter, lowerBound, upperBound, candidate
     for(i in 1:nrow(seekingVariable)){
       numCopies <- nrow(copies[copies$copyId == i,])
       probCopies <- copies[copies$copyId == i, "probability"]
-      #probCopies[probCopies < 0] <- 0
-      choosenCopy <- sample(1:numCopies, 1, prob = probCopies)
+      if(all(probCopies == 0)){
+        choosenCopy <- sample(1:numCopies, 1, replace = TRUE)
+      }else{
+        choosenCopy <- sample(1:numCopies, 1, prob = probCopies, replace = TRUE)
+      }
       choosenCopy <- copies[copies$copyId == i, ][choosenCopy, indexVariable]
       seekingVariable[seekingVariable$copyId == i, indexVariable] <- choosenCopy
     }
